@@ -1,0 +1,2099 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SYMBIOLIVE - Build with AI, not just for AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f0f4ff 0%, #e6f0ff 50%, #f0f4ff 100%);
+            color: #334155;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated Gradient Background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(120, 119, 198, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(255, 107, 107, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(77, 208, 225, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 30% 70%, rgba(120, 220, 120, 0.05) 0%, transparent 40%);
+            animation: bgShift 20s ease-in-out infinite;
+        }
+
+        @keyframes bgShift {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0.7;
+            }
+            25% {
+                transform: translate(-20px, -10px) scale(1.05);
+                opacity: 0.8;
+            }
+            50% {
+                transform: translate(10px, 15px) scale(1.03);
+                opacity: 0.9;
+            }
+            75% {
+                transform: translate(-15px, 5px) scale(1.02);
+                opacity: 0.8;
+            }
+        }
+
+        /* Floating Shapes Animation */
+        .floating-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .shape {
+            position: absolute;
+            opacity: 0.2;
+            animation: floatShape 15s infinite linear;
+        }
+
+        .shape-1 {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(45deg, #7877C6, #4FD1C5);
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+
+        .shape-2 {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(45deg, #FF6B6B, #FFD166);
+            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            top: 70%;
+            left: 80%;
+            animation-delay: 2s;
+        }
+
+        .shape-3 {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(45deg, #4FD1C5, #7877C6);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            top: 20%;
+            left: 85%;
+            animation-delay: 4s;
+        }
+
+        @keyframes floatShape {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            33% {
+                transform: translate(30px, -50px) rotate(120deg);
+            }
+            66% {
+                transform: translate(-20px, 20px) rotate(240deg);
+            }
+            100% {
+                transform: translate(0, 0) rotate(360deg);
+            }
+        }
+
+        .page {
+            display: none;
+            min-height: 100vh;
+            padding: 2rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        
+        .page.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(120, 119, 198, 0.15);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s ease;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(120, 119, 198, 0.6), transparent);
+        }
+
+        .card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(120, 119, 198, 0.05) 0%, rgba(255, 107, 107, 0.05) 100%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            z-index: -1;
+        }
+
+        .card:hover::after {
+            opacity: 1;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #7877C6 0%, #4FD1C5 100%);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            color: white;
+            border: none;
+        }
+        
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: all 0.6s;
+            z-index: -1;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 25px rgba(120, 119, 198, 0.3);
+        }
+        
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+        
+        .feature-card {
+            transition: all 0.5s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-15px) rotateX(5deg) rotateY(5deg);
+            box-shadow: 0 25px 50px rgba(120, 119, 198, 0.2);
+        }
+        
+        .glow {
+            box-shadow: 0 0 30px rgba(120, 119, 198, 0.3);
+        }
+        
+        .floating {
+            animation: floatingElement 8s ease-in-out infinite;
+        }
+        
+        @keyframes floatingElement {
+            0% { transform: translate(0, 0px) rotate(0deg); }
+            33% { transform: translate(10px, -20px) rotate(120deg); }
+            66% { transform: translate(-5px, 10px) rotate(240deg); }
+            100% { transform: translate(0, 0px) rotate(360deg); }
+        }
+        
+        .pulse {
+            animation: pulseEffect 3s infinite;
+        }
+        
+        @keyframes pulseEffect {
+            0% { 
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(120, 119, 198, 0.4);
+            }
+            70% { 
+                transform: scale(1.05);
+                box-shadow: 0 0 0 20px rgba(120, 119, 198, 0);
+            }
+            100% { 
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(120, 119, 198, 0);
+            }
+        }
+        
+        /* Advanced typewriter effect with cursor removal */
+        .typewriter-container {
+            display: inline-block;
+            position: relative;
+        }
+        
+        .typewriter {
+            overflow: hidden;
+            white-space: nowrap;
+            margin: 0 auto;
+            animation: typing 3.5s steps(40, end);
+        }
+        
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        
+        .typewriter-cursor {
+            display: inline-block;
+            width: 3px;
+            background-color: #7877C6;
+            margin-left: 2px;
+            animation: blink 0.7s step-end infinite;
+        }
+        
+        @keyframes blink {
+            from, to { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        
+        .cursor-hidden {
+            animation: none;
+            opacity: 0;
+        }
+        
+        .slide-in-left {
+            animation: slideInLeft 1s ease-out;
+        }
+        
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-100px) rotate(-10deg);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0) rotate(0);
+            }
+        }
+        
+        .slide-in-right {
+            animation: slideInRight 1s ease-out;
+        }
+        
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px) rotate(10deg);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0) rotate(0);
+            }
+        }
+        
+        .fade-in {
+            animation: fadeIn 1.2s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { 
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .bounce-in {
+            animation: bounceIn 1s ease-out;
+        }
+        
+        @keyframes bounceIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.3) rotate(-10deg);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.05) rotate(5deg);
+            }
+            70% {
+                transform: scale(0.95) rotate(-2deg);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) rotate(0);
+            }
+        }
+        
+        .user-profile {
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #7877C6;
+        }
+        
+        .contact-number {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .contact-number:hover {
+            color: #7877C6;
+            transform: scale(1.05);
+        }
+        
+        .contact-number::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #7877C6;
+            transition: width 0.3s ease;
+        }
+        
+        .contact-number:hover::after {
+            width: 100%;
+        }
+        
+        .copied-message {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 20px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            animation: slideUp 0.5s ease-out;
+            color: #334155;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        .modal-content {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            animation: modalAppear 0.5s ease-out;
+            border: 1px solid rgba(120, 119, 198, 0.2);
+            position: relative;
+            overflow: hidden;
+            color: #334155;
+        }
+        
+        .modal-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #7877C6, #4FD1C5);
+        }
+        
+        @keyframes modalAppear {
+            from {
+                opacity: 0;
+                transform: scale(0.8) translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        
+        .nav-link {
+            position: relative;
+            overflow: hidden;
+            color: #64748b;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #7877C6, #4FD1C5);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .nav-link:hover {
+            color: #334155;
+        }
+        
+        .logo {
+            transition: all 0.5s ease;
+        }
+        
+        .logo:hover {
+            transform: rotate(10deg) scale(1.1);
+        }
+        
+        .flip-in {
+            animation: flipIn 1s ease-out;
+        }
+        
+        @keyframes flipIn {
+            from {
+                opacity: 0;
+                transform: perspective(400px) rotateY(90deg);
+            }
+            to {
+                opacity: 1;
+                transform: perspective(400px) rotateY(0);
+            }
+        }
+        
+        .rotate-in {
+            animation: rotateIn 1s ease-out;
+        }
+        
+        @keyframes rotateIn {
+            from {
+                opacity: 0;
+                transform: rotate(-180deg) scale(0.5);
+            }
+            to {
+                opacity: 1;
+                transform: rotate(0) scale(1);
+            }
+        }
+        
+        .text-glow {
+            text-shadow: 0 0 10px rgba(120, 119, 198, 0.3);
+        }
+
+        /* Feature Carousel Styles */
+        .feature-carousel {
+            display: flex;
+            overflow-x: auto;
+            gap: 2rem;
+            padding: 2rem 0;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .feature-carousel::-webkit-scrollbar {
+            display: none;
+        }
+
+        .feature-item {
+            flex: 0 0 auto;
+            width: 350px;
+            scroll-snap-align: start;
+            transition: all 0.5s ease;
+            animation: trainMove 20s linear infinite;
+        }
+
+        .feature-item:hover {
+            animation-play-state: paused;
+            transform: scale(1.05);
+        }
+
+        @keyframes trainMove {
+            0% {
+                transform: translateX(100vw);
+            }
+            100% {
+                transform: translateX(-100vw);
+            }
+        }
+
+        .feature-popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1001;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .feature-popup-content {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 2rem;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+            animation: modalAppear 0.5s ease-out;
+            border: 1px solid rgba(120, 119, 198, 0.3);
+            position: relative;
+        }
+
+        .feature-popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-popup-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #7877C6, #4FD1C5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .feature-popup-close {
+            background: none;
+            border: none;
+            color: #64748b;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .feature-popup-close:hover {
+            color: #334155;
+        }
+
+        .feature-popup-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .feature-popup-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .feature-option {
+            background: rgba(240, 244, 255, 0.7);
+            border: 1px solid rgba(120, 119, 198, 0.2);
+            border-radius: 10px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .feature-option:hover {
+            background: rgba(120, 119, 198, 0.1);
+            transform: translateX(5px);
+        }
+
+        .feature-option.active {
+            background: rgba(120, 119, 198, 0.15);
+            border-color: #7877C6;
+        }
+
+        .feature-popup-demo {
+            background: rgba(240, 244, 255, 0.7);
+            border-radius: 10px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .demo-input {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(120, 119, 198, 0.2);
+            border-radius: 8px;
+            padding: 1rem;
+            color: #334155;
+            resize: none;
+            min-height: 150px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .demo-output {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(120, 119, 198, 0.2);
+            border-radius: 8px;
+            padding: 1rem;
+            color: #334155;
+            min-height: 200px;
+            font-family: 'Courier New', monospace;
+            overflow-y: auto;
+        }
+
+        .demo-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .typing-indicator {
+            display: inline-block;
+            position: relative;
+            width: 80px;
+            height: 20px;
+        }
+
+        .typing-indicator div {
+            position: absolute;
+            top: 7px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #7877C6;
+            animation: typing 1.4s infinite ease-in-out both;
+        }
+
+        .typing-indicator div:nth-child(1) {
+            left: 6px;
+            animation-delay: -0.32s;
+        }
+
+        .typing-indicator div:nth-child(2) {
+            left: 26px;
+            animation-delay: -0.16s;
+        }
+
+        .typing-indicator div:nth-child(3) {
+            left: 46px;
+            animation-delay: 0;
+        }
+
+        @keyframes typing {
+            0%, 80%, 100% {
+                transform: scale(0);
+            }
+            40% {
+                transform: scale(1);
+            }
+        }
+
+        .code-suggestion {
+            background: rgba(79, 209, 197, 0.1);
+            border-left: 4px solid #4FD1C5;
+            padding: 0.5rem 1rem;
+            margin: 0.5rem 0;
+            border-radius: 4px;
+        }
+
+        .art-preview {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .learning-progress {
+            height: 10px;
+            background: rgba(120, 119, 198, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(135deg, #7877C6 0%, #4FD1C5 100%);
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+
+        /* Contact Page Styles */
+        .team-member {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .team-member:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .member-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #7877C6, #4FD1C5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2rem;
+            color: white;
+        }
+
+        .member-role {
+            display: inline-block;
+            background: rgba(120, 119, 198, 0.1);
+            color: #7877C6;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* About Us Page Styles */
+        .about-section {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .about-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Animated Background -->
+    <div class="animated-bg"></div>
+    
+    <!-- Floating Shapes -->
+    <div class="floating-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+    
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 w-full z-50 p-4 bg-white/80 backdrop-blur-md shadow-sm">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-2 cursor-pointer logo" onclick="showPage('home')">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-r from-purple-500 to-cyan-500 flex items-center justify-center">
+                    <i class="fas fa-brain text-white"></i>
+                </div>
+                <span class="text-xl font-bold text-slate-800">SYMBIOLIVE</span>
+            </div>
+            <div class="hidden md:flex space-x-8">
+                <a href="#" class="nav-link" onclick="showPage('home')">Home</a>
+                <a href="#" class="nav-link" onclick="showPage('features')">Features</a>
+                <a href="#" class="nav-link" onclick="showPage('about')">About Us</a>
+                <a href="#" class="nav-link" onclick="showPage('workspace')">Workspace</a>
+                <a href="#" class="nav-link" onclick="showPage('contact')">Contact</a>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div id="user-profile" class="user-profile">
+                    <img id="user-avatar" src="" alt="User" class="user-avatar">
+                    <span id="user-name" class="text-slate-800"></span>
+                    <button class="text-slate-600 hover:text-slate-800 transition-colors ml-2" onclick="logout()">Logout</button>
+                </div>
+                <button id="login-btn" class="nav-link" onclick="showPage('login')">Login</button>
+                <button id="signup-btn" class="btn-primary text-white px-4 py-2 rounded-full font-medium" onclick="showPage('register')">Get Started</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Home Page -->
+    <div id="home" class="page active">
+        <div class="max-w-7xl mx-auto pt-24 pb-16 px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in">
+                <h1 class="text-5xl md:text-7xl font-bold text-slate-800 mb-6">
+                    <div class="typewriter-container">
+                        <span class="typewriter">SYMBIOLIVE</span>
+                        <span id="typewriter-cursor" class="typewriter-cursor"></span>
+                    </div>
+                </h1>
+                <p class="text-xl md:text-2xl text-slate-600 mb-10 max-w-3xl mx-auto">Build with AI, not just for AI</p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <button class="btn-primary text-white px-8 py-3 rounded-full font-medium text-lg pulse" onclick="showPage('register')">
+                        Start Creating
+                    </button>
+                    <button class="bg-transparent border border-slate-300 text-slate-700 px-8 py-3 rounded-full font-medium text-lg hover:bg-slate-100 transition-colors" onclick="showPage('login')">
+                        Sign In
+                    </button>
+                </div>
+            </div>
+
+            <div class="card p-8 max-w-4xl mx-auto bounce-in">
+                <h2 class="text-3xl font-bold text-slate-800 text-center mb-6">How SYMBIOLIVE Works</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center flex-shrink-0">
+                            <span class="text-white font-bold">1</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold text-slate-800 mb-2">Sign Up & Connect</h3>
+                            <p class="text-slate-600">Create your account and connect your development environment or creative tools.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 rounded-full bg-purple-500 flex items-center justify-center flex-shrink-0">
+                            <span class="text-white font-bold">2</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold text-slate-800 mb-2">AI Learns Your Style</h3>
+                            <p class="text-slate-600">Our AI analyzes your patterns, preferences, and working style to personalize its assistance.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0">
+                            <span class="text-white font-bold">3</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold text-slate-800 mb-2">Collaborate & Create</h3>
+                            <p class="text-slate-600">Work alongside AI to enhance your projects with intelligent suggestions and co-creation.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 rounded-full bg-yellow-500 flex items-center justify-center flex-shrink-0">
+                            <span class="text-white font-bold">4</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold text-slate-800 mb-2">Grow Together</h3>
+                            <p class="text-slate-600">As you evolve, so does your AI companion, continuously adapting to your changing needs.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Page -->
+    <div id="features" class="page">
+        <div class="max-w-7xl mx-auto pt-24 pb-16 px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in">
+                <h1 class="text-4xl md:text-6xl font-bold text-slate-800 mb-6">AI Features</h1>
+                <p class="text-xl text-slate-600 max-w-3xl mx-auto">Discover how SYMBIOLIVE transforms your creative and development workflow</p>
+            </div>
+
+            <div class="feature-carousel mb-16">
+                <!-- AI Code Assistant -->
+                <div class="feature-item">
+                    <div class="card p-6 feature-card h-full" onclick="openFeaturePopup('code')">
+                        <div class="w-14 h-14 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center mb-4 floating">
+                            <i class="fas fa-code text-white text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">AI Code Assistant</h3>
+                        <p class="text-slate-600">AI that learns your coding style and suggests intelligent refactors to improve your code quality and efficiency.</p>
+                        <div class="mt-4 flex items-center text-cyan-500">
+                            <span>Try it now</span>
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Co-Creative Companion -->
+                <div class="feature-item">
+                    <div class="card p-6 feature-card h-full" onclick="openFeaturePopup('creative')">
+                        <div class="w-14 h-14 rounded-full bg-gradient-to-r from-green-500 to-teal-500 flex items-center justify-center mb-4 floating" style="animation-delay: 0.5s">
+                            <i class="fas fa-paint-brush text-white text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">Co-Creative Companion</h3>
+                        <p class="text-slate-600">Collaborate with AI on art, story, and design projects. Your creative partner for innovative solutions.</p>
+                        <div class="mt-4 flex items-center text-cyan-500">
+                            <span>Try it now</span>
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Personalized AI Tutor -->
+                <div class="feature-item">
+                    <div class="card p-6 feature-card h-full" onclick="openFeaturePopup('tutor')">
+                        <div class="w-14 h-14 rounded-full bg-gradient-to-r from-yellow-500 to-orange-500 flex items-center justify-center mb-4 floating" style="animation-delay: 1s">
+                            <i class="fas fa-graduation-cap text-white text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">Personalized AI Tutor</h3>
+                        <p class="text-slate-600">AI tutors that adapt to your learning pace and style, providing customized guidance and support.</p>
+                        <div class="mt-4 flex items-center text-cyan-500">
+                            <span>Try it now</span>
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card p-8 max-w-4xl mx-auto fade-in">
+                <h2 class="text-2xl font-bold text-slate-800 text-center mb-8">Technical Architecture</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="flex items-start space-x-4">
+                        <i class="fas fa-server text-blue-500 mt-1 text-xl"></i>
+                        <div>
+                            <h3 class="text-lg font-semibold text-slate-800 mb-1">Node.js Backend</h3>
+                            <p class="text-slate-600">Express framework with real-time WebSocket connections</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-4">
+                        <i class="fas fa-database text-green-500 mt-1 text-xl"></i>
+                        <div>
+                            <h3 class="text-lg font-semibold text-slate-800 mb-1">MongoDB Database</h3>
+                            <p class="text-slate-600">For user data, preferences, and workspace storage</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-4">
+                        <i class="fas fa-brain text-purple-500 mt-1 text-xl"></i>
+                        <div>
+                            <h3 class="text-lg font-semibold text-slate-800 mb-1">TensorFlow.js</h3>
+                            <p class="text-slate-600">Client-side AI model execution for personalized responses</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-4">
+                        <i class="fas fa-cloud text-yellow-500 mt-1 text-xl"></i>
+                        <div>
+                            <h3 class="text-lg font-semibold text-slate-800 mb-1">Cloud AI Models</h3>
+                            <p class="text-slate-600">For complex computations and advanced AI capabilities</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Us Page -->
+    <div id="about" class="page">
+        <div class="max-w-7xl mx-auto pt-24 pb-16 px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in">
+                <h1 class="text-4xl md:text-6xl font-bold text-slate-800 mb-6">About Us</h1>
+                <p class="text-xl text-slate-600 max-w-3xl mx-auto">Learn about our mission, vision, and the team behind SYMBIOLIVE</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+                <div class="about-section bounce-in">
+                    <h2 class="text-2xl font-bold text-slate-800 mb-4">Our Mission</h2>
+                    <p class="text-slate-600 mb-4">At SYMBIOLIVE, we believe that the future of technology isn't about humans being replaced by AI, but about humans and AI working together in creative partnership.</p>
+                    <p class="text-slate-600">Our mission is to build tools that enhance human creativity and productivity through intelligent collaboration with artificial intelligence.</p>
+                </div>
+
+                <div class="about-section bounce-in" style="animation-delay: 0.2s">
+                    <h2 class="text-2xl font-bold text-slate-800 mb-4">Our Vision</h2>
+                    <p class="text-slate-600 mb-4">We envision a world where AI understands your unique style, adapts to your workflow, and becomes a true extension of your creative and problem-solving capabilities.</p>
+                    <p class="text-slate-600">SYMBIOLIVE is designed to grow with you, learning from your interactions to provide increasingly personalized assistance.</p>
+                </div>
+            </div>
+
+            <div class="card p-8 max-w-4xl mx-auto mb-16 fade-in">
+                <h2 class="text-2xl font-bold text-slate-800 text-center mb-8">Our Values</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="text-center">
+                        <div class="w-20 h-20 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-users text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-slate-800 mb-2">Collaboration</h3>
+                        <p class="text-slate-600">We believe in creating tools that work with you, not just for you.</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-20 h-20 rounded-full bg-gradient-to-r from-green-500 to-teal-500 flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-lightbulb text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-slate-800 mb-2">Innovation</h3>
+                        <p class="text-slate-600">We push the boundaries of what's possible in human-AI interaction.</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-20 h-20 rounded-full bg-gradient-to-r from-yellow-500 to-orange-500 flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-shield-alt text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-slate-800 mb-2">Privacy</h3>
+                        <p class="text-slate-600">Your data and creative works belong to you, always.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <h2 class="text-3xl font-bold text-slate-800 mb-8">Ready to Start Your SYMBIOLIVE Journey?</h2>
+                <button class="btn-primary text-white px-8 py-3 rounded-full font-medium text-lg" onclick="showPage('register')">
+                    Join Now
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Workspace Page -->
+    <div id="workspace" class="page">
+        <div class="max-w-7xl mx-auto pt-24 pb-16 px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in">
+                <h1 class="text-4xl md:text-6xl font-bold text-slate-800 mb-6">Workspace</h1>
+                <p class="text-xl text-slate-600 max-w-3xl mx-auto">Your saved work and AI-assisted creations</p>
+            </div>
+
+            <div class="mb-8 flex justify-between items-center">
+                <h2 class="text-2xl font-bold text-slate-800">My Projects</h2>
+                <button class="btn-primary text-white px-4 py-2 rounded-lg font-medium" onclick="showWorkspaceModal()">
+                    <i class="fas fa-plus mr-2"></i> New Project
+                </button>
+            </div>
+
+            <div id="workspace-content" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Workspace items will be dynamically added here -->
+            </div>
+
+            <div id="empty-workspace" class="card p-8 text-center fade-in">
+                <div class="w-24 h-24 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-folder-open text-slate-400 text-3xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-slate-800 mb-2">Your workspace is empty</h3>
+                <p class="text-slate-600 mb-6">Start using the AI assistants to create content that will be saved here.</p>
+                <button class="btn-primary text-white px-6 py-2 rounded-lg font-medium" onclick="showPage('features')">
+                    Explore Features
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Page -->
+    <div id="contact" class="page">
+        <div class="max-w-7xl mx-auto pt-24 pb-16 px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in">
+                <h1 class="text-4xl md:text-6xl font-bold text-slate-800 mb-6">Contact Us</h1>
+                <p class="text-xl text-slate-600 max-w-3xl mx-auto">Get in touch with the TECHMINDS team behind SYMBIOLIVE</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+                <div class="card p-8 bounce-in">
+                    <h2 class="text-2xl font-bold text-slate-800 mb-6">Our Team</h2>
+                    
+                    <div class="mb-8">
+                        <h3 class="text-xl font-semibold text-slate-800 mb-2">Team Name: <span class="text-blue-500">TECHMINDS</span></h3>
+                        <p class="text-slate-600">We're the developers and creators behind SYMBIOLIVE, passionate about building the future of human-AI collaboration.</p>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <div class="team-member">
+                            <div class="member-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-slate-800 text-center">Venkatesh Pawar</h3>
+                            <div class="member-role text-center mx-auto">Full Stack Developer & AI/ML</div>
+                            <div class="text-center mt-4">
+                                <p class="text-slate-600 flex items-center justify-center mb-2">
+                                    <i class="fas fa-phone mr-2"></i>
+                                    <span class="contact-number" data-number="9887623055">+91 98876 23055</span>
+                                </p>
+                                <p class="text-slate-600 flex items-center justify-center">
+                                    <i class="fas fa-envelope mr-2"></i>
+                                    <span>venkateshpawar@gmail.com</span>
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="team-member">
+                            <div class="member-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-slate-800 text-center">Suryakant Chichakoti</h3>
+                            <div class="member-role text-center mx-auto">UI/UX & Deployment</div>
+                            <div class="text-center mt-4">
+                                <p class="text-slate-600 flex items-center justify-center mb-2">
+                                    <i class="fas fa-phone mr-2"></i>
+                                    <span class="contact-number" data-number="9987456321">+91 99874 56321</span>
+                                </p>
+                                <p class="text-slate-600 flex items-center justify-center">
+                                    <i class="fas fa-envelope mr-2"></i>
+                                    <span>surykantchichakoti@gmail.com</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card p-8 bounce-in" style="animation-delay: 0.2s">
+                    <h2 class="text-2xl font-bold text-slate-800 mb-6">Send Us a Message</h2>
+                    <form id="contact-form">
+                        <div class="mb-4">
+                            <label class="block text-slate-700 mb-2" for="contact-name">Your Name</label>
+                            <input type="text" id="contact-name" class="w-full bg-slate-100 border border-slate-300 rounded-lg px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300" placeholder="Enter your name">
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-slate-700 mb-2" for="contact-email">Your Email</label>
+                            <input type="email" id="contact-email" class="w-full bg-slate-100 border border-slate-300 rounded-lg px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300" placeholder="your@email.com">
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-slate-700 mb-2" for="contact-subject">Subject</label>
+                            <input type="text" id="contact-subject" class="w-full bg-slate-100 border border-slate-300 rounded-lg px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300" placeholder="What is this regarding?">
+                        </div>
+                        
+                        <div class="mb-6">
+                            <label class="block text-slate-700 mb-2" for="contact-message">Your Message</label>
+                            <textarea id="contact-message" rows="5" class="w-full bg-slate-100 border border-slate-300 rounded-lg px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300" placeholder="Tell us about your project or inquiry..."></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn-primary w-full text-white py-3 rounded-lg font-medium">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card p-8 max-w-4xl mx-auto fade-in">
+                <h2 class="text-2xl font-bold text-slate-800 text-center mb-6">Visit Us</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                    <div>
+                        <div class="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-map-marker-alt text-blue-500 text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-slate-800 mb-2">Address</h3>
+                        <p class="text-slate-600">Polaris School of Technology</p>
+                        <p class="text-slate-600">Bangalore, India</p>
+                    </div>
+                    <div>
+                        <div class="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-clock text-green-500 text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-slate-800 mb-2">Working Hours</h3>
+                        <p class="text-slate-600">Monday - Friday: 9AM - 6PM</p>
+                        <p class="text-slate-600">Weekend: 10AM - 4PM</p>
+                    </div>
+                    <div>
+                        <div class="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-hackathon text-purple-500 text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-slate-800 mb-2">Hackathon</h3>
+                        <p class="text-slate-600">Polaris Hackathon 2023</p>
+                        <p class="text-slate-600">Project: SYMBIOLIVE</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Page -->
+    <div id="login" class="page">
+        <div class="max-w-md mx-auto pt-24 pb-16 px-4">
+            <div class="card p-8 bounce-in">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-slate-800">Welcome Back</h2>
+                    <p class="text-slate-600 mt-2">Sign in to your SYMBIOLIVE account</p>
+                </div>
+                
+                <form id="login-form">
+                    <div class="mb-4">
+                        <label class="block text-slate-700 mb-2" for="login-email">Email</label>
+                        <input type="email" id="login-email" class="w-full bg-slate-100 border border-slate-300 rounded-lg px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300" placeholder="your@email.com">
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-slate-700 mb-2" for="login-password">Password</label>
+                        <input type="password" id="login-password" class="w-full bg-slate-100 border border-slate-300 rounded-lg px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300" placeholder="••••••••">
+                    </div>
+                    
+                    <button type="submit" class="btn-primary w-full text-white py-3 rounded-lg font-medium mb-6">
+                        Sign In
+                    </button>
+                    
+                    <div class="text-center">
+                        <p class="text-slate-600">Don't have an account? 
+                            <a href="#" class="text-blue-500 hover:text-blue-600 transition-colors" onclick="showPage('register')">Sign up</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Registration Page -->
+    <div id="register" class="page">
+        <div class="max-w-md mx-auto pt-24 pb-16 px-4">
+            <div class="card p-8 bounce-in">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-slate-800">Join SYMBIOLIVE</h2>
+                    <p class="text-slate-600 mt-2">Create your account to start building with AI</p>
+                </div>
+                
+                <form id="register-form">
+                    <div class="mb-4">
+                        <label class="block text-slate-700 mb-2" for="register-name">Full Name</label>
+                        <input type="text" id="register-name" class="w-full bg-slate-100 border border-slate-300 rounded-lg px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300" placeholder="John Doe">
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-slate-700 mb-2" for="register-email">Email</label>
+                        <input type="email" id="register-email" class="w-full bg-slate-100 border border-slate-300 rounded-lg px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300" placeholder="your@email.com">
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-slate-700 mb-2" for="register-password">Password</label>
+                        <input type="password" id="register-password" class="w-full bg-slate-100 border border-slate-300 rounded-lg px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300" placeholder="••••••••">
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="flex items-center">
+                            <input type="checkbox" class="rounded bg-slate-100 border-slate-300 text-blue-500 focus:ring-blue-500">
+                            <span class="ml-2 text-slate-700">I agree to the <a href="#" class="text-blue-500 hover:text-blue-600">Terms of Service</a> and <a href="#" class="text-blue-500 hover:text-blue-600">Privacy Policy</a></span>
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="btn-primary w-full text-white py-3 rounded-lg font-medium mb-6">
+                        Create Account
+                    </button>
+                    
+                    <div class="text-center">
+                        <p class="text-slate-600">Already have an account? 
+                            <a href="#" class="text-blue-500 hover:text-blue-600 transition-colors" onclick="showPage('login')">Sign in</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feature Popups -->
+    <div id="feature-popup-code" class="feature-popup">
+        <div class="feature-popup-content">
+            <div class="feature-popup-header">
+                <h2 class="feature-popup-title">AI Code Assistant</h2>
+                <button class="feature-popup-close" onclick="closeFeaturePopup('code')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="feature-popup-body">
+                <div class="feature-popup-options">
+                    <div class="feature-option active" onclick="setFeatureOption('code', 'refactor')">
+                        <h4 class="font-semibold text-slate-800 mb-1">Code Refactoring</h4>
+                        <p class="text-slate-600 text-sm">Improve your code structure and efficiency</p>
+                    </div>
+                    <div class="feature-option" onclick="setFeatureOption('code', 'debug')">
+                        <h4 class="font-semibold text-slate-800 mb-1">Debug Assistant</h4>
+                        <p class="text-slate-600 text-sm">Find and fix bugs in your code</p>
+                    </div>
+                    <div class="feature-option" onclick="setFeatureOption('code', 'optimize')">
+                        <h4 class="font-semibold text-slate-800 mb-1">Performance Optimization</h4>
+                        <p class="text-slate-600 text-sm">Make your code run faster and use less resources</p>
+                    </div>
+                    <div class="feature-option" onclick="setFeatureOption('code', 'document')">
+                        <h4 class="font-semibold text-slate-800 mb-1">Code Documentation</h4>
+                        <p class="text-slate-600 text-sm">Generate comprehensive documentation</p>
+                    </div>
+                </div>
+                <div class="feature-popup-demo">
+                    <h3 class="font-semibold text-slate-800 mb-2">Try It Out</h3>
+                    <textarea class="demo-input" placeholder="Enter your code here..." id="code-input">function calculateSum(a, b) {
+  return a + b;
+}</textarea>
+                    <div class="demo-actions">
+                        <button class="btn-primary text-white px-4 py-2 rounded-lg" onclick="processCodeRequest()">Process Code</button>
+                        <button class="bg-slate-200 text-slate-800 px-4 py-2 rounded-lg hover:bg-slate-300 transition-colors" onclick="clearCodeDemo()">Clear</button>
+                    </div>
+                    <div class="demo-output" id="code-output">
+                        <p class="text-slate-500">Your AI-generated code suggestions will appear here...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="feature-popup-creative" class="feature-popup">
+        <div class="feature-popup-content">
+            <div class="feature-popup-header">
+                <h2 class="feature-popup-title">Co-Creative Companion</h2>
+                <button class="feature-popup-close" onclick="closeFeaturePopup('creative')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="feature-popup-body">
+                <div class="feature-popup-options">
+                    <div class="feature-option active" onclick="setFeatureOption('creative', 'story')">
+                        <h4 class="font-semibold text-slate-800 mb-1">Story Generation</h4>
+                        <p class="text-slate-600 text-sm">Create engaging narratives and plotlines</p>
+                    </div>
+                    <div class="feature-option" onclick="setFeatureOption('creative', 'art')">
+                        <h4 class="font-semibold text-slate-800 mb-1">Art Inspiration</h4>
+                        <p class="text-slate-600 text-sm">Generate artistic concepts and visual ideas</p>
+                    </div>
+                    <div class="feature-option" onclick="setFeatureOption('creative', 'design')">
+                        <h4 class="font-semibold text-slate-800 mb-1">Design Concepts</h4>
+                        <p class="text-slate-600 text-sm">Develop UI/UX and graphic design ideas</p>
+                    </div>
+                    <div class="feature-option" onclick="setFeatureOption('creative', 'music')">
+                        <h4 class="font-semibold text-slate-800 mb-1">Music & Audio</h4>
+                        <p class="text-slate-600 text-sm">Create melodies, rhythms, and soundscapes</p>
+                    </div>
+                </div>
+                <div class="feature-popup-demo">
+                    <h3 class="font-semibold text-slate-800 mb-2">Try It Out</h3>
+                    <textarea class="demo-input" placeholder="Describe your creative project..." id="creative-input">A sci-fi story about a future where humans and AI coexist peacefully</textarea>
+                    <div class="demo-actions">
+                        <button class="btn-primary text-white px-4 py-2 rounded-lg" onclick="processCreativeRequest()">Generate Ideas</button>
+                        <button class="bg-slate-200 text-slate-800 px-4 py-2 rounded-lg hover:bg-slate-300 transition-colors" onclick="clearCreativeDemo()">Clear</button>
+                    </div>
+                    <div class="demo-output" id="creative-output">
+                        <p class="text-slate-500">Your AI-generated creative content will appear here...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="feature-popup-tutor" class="feature-popup">
+        <div class="feature-popup-content">
+            <div class="feature-popup-header">
+                <h2 class="feature-popup-title">Personalized AI Tutor</h2>
+                <button class="feature-popup-close" onclick="closeFeaturePopup('tutor')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="feature-popup-body">
+                <div class="feature-popup-options">
+                    <div class="feature-option active" onclick="setFeatureOption('tutor', 'explain')">
+                        <h4 class="font-semibold text-slate-800 mb-1">Concept Explanation</h4>
+                        <p class="text-slate-600 text-sm">Get detailed explanations of complex topics</p>
+                    </div>
+                    <div class="feature-option" onclick="setFeatureOption('tutor', 'quiz')">
+                        <h4 class="font-semibold text-slate-800 mb-1">Interactive Quizzes</h4>
+                        <p class="text-slate-600 text-sm">Test your knowledge with personalized quizzes</p>
+                    </div>
+                    <div class="feature-option" onclick="setFeatureOption('tutor', 'practice')">
+                        <h4 class="font-semibold text-slate-800 mb-1">Practice Problems</h4>
+                        <p class="text-slate-600 text-sm">Solve problems with step-by-step guidance</p>
+                    </div>
+                    <div class="feature-option" onclick="setFeatureOption('tutor', 'study')">
+                        <h4 class="font-semibold text-slate-800 mb-1">Study Plans</h4>
+                        <p class="text-slate-600 text-sm">Create personalized learning schedules</p>
+                    </div>
+                </div>
+                <div class="feature-popup-demo">
+                    <h3 class="font-semibold text-slate-800 mb-2">Try It Out</h3>
+                    <textarea class="demo-input" placeholder="What would you like to learn?" id="tutor-input">Explain how machine learning algorithms work</textarea>
+                    <div class="demo-actions">
+                        <button class="btn-primary text-white px-4 py-2 rounded-lg" onclick="processTutorRequest()">Explain Concept</button>
+                        <button class="bg-slate-200 text-slate-800 px-4 py-2 rounded-lg hover:bg-slate-300 transition-colors" onclick="clearTutorDemo()">Clear</button>
+                    </div>
+                    <div class="demo-output" id="tutor-output">
+                        <p class="text-slate-500">Your AI-generated explanation will appear here...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="modal">
+        <div class="modal-content">
+            <div class="w-20 h-20 rounded-full bg-green-500 flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-check text-white text-2xl"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-slate-800 mb-2" id="success-title">Success!</h3>
+            <p class="text-slate-600 mb-6" id="success-message">Operation completed successfully.</p>
+            <button class="btn-primary text-white px-6 py-2 rounded-lg font-medium" onclick="closeSuccessModal()">
+                Continue
+            </button>
+        </div>
+    </div>
+
+    <!-- Copied Message -->
+    <div id="copied-message" class="copied-message">
+        <span class="text-green-500"><i class="fas fa-check-circle mr-2"></i>Number copied to clipboard!</span>
+    </div>
+
+    <script>
+        // Application State
+        let currentFeature = '';
+        let currentOption = '';
+        let workspaceItems = [];
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check login status
+            checkLoginStatus();
+            
+            // Load workspace items
+            loadWorkspace();
+            
+            // Hide cursor after typing animation completes
+            setTimeout(() => {
+                document.getElementById('typewriter-cursor').classList.add('cursor-hidden');
+            }, 3500);
+            
+            // Form submission handlers
+            document.getElementById('login-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const email = document.getElementById('login-email').value;
+                const password = document.getElementById('login-password').value;
+                
+                if (email && password) {
+                    const user = {
+                        name: email.split('@')[0],
+                        email: email,
+                        picture: "https://via.placeholder.com/150"
+                    };
+                    
+                    localStorage.setItem('symbiolive_user', JSON.stringify(user));
+                    updateUserProfile(user);
+                    showPage('home');
+                    showSuccess("Login Successful", `Welcome back, ${user.name}!`);
+                } else {
+                    showSuccess("Login Failed", "Please enter both email and password.", false);
+                }
+            });
+            
+            document.getElementById('register-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const name = document.getElementById('register-name').value;
+                const email = document.getElementById('register-email').value;
+                const password = document.getElementById('register-password').value;
+                
+                if (name && email && password) {
+                    const user = {
+                        name: name,
+                        email: email,
+                        picture: "https://via.placeholder.com/150"
+                    };
+                    
+                    localStorage.setItem('symbiolive_user', JSON.stringify(user));
+                    updateUserProfile(user);
+                    showSuccess("Registration Successful", "Welcome to SYMBIOLIVE! Your account has been created.");
+                } else {
+                    showSuccess("Registration Failed", "Please fill in all required fields.", false);
+                }
+            });
+            
+            document.getElementById('contact-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                showSuccess("Message Sent", "Thank you for contacting us! We'll get back to you soon.");
+                document.getElementById('contact-form').reset();
+            });
+            
+            // Contact number click handlers
+            document.querySelectorAll('.contact-number').forEach(element => {
+                element.addEventListener('click', function() {
+                    const number = this.getAttribute('data-number');
+                    copyToClipboard(number);
+                });
+            });
+        });
+
+        // Feature Popup Functions
+        function openFeaturePopup(feature) {
+            currentFeature = feature;
+            document.getElementById(`feature-popup-${feature}`).style.display = 'flex';
+            
+            // Set default option
+            if (feature === 'code') setFeatureOption('code', 'refactor');
+            if (feature === 'creative') setFeatureOption('creative', 'story');
+            if (feature === 'tutor') setFeatureOption('tutor', 'explain');
+        }
+
+        function closeFeaturePopup(feature) {
+            document.getElementById(`feature-popup-${feature}`).style.display = 'none';
+        }
+
+        function setFeatureOption(feature, option) {
+            currentOption = option;
+            
+            // Remove active class from all options
+            document.querySelectorAll(`#feature-popup-${feature} .feature-option`).forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            // Add active class to selected option
+            event.target.closest('.feature-option').classList.add('active');
+            
+            // Update placeholder text based on option
+            const input = document.getElementById(`${feature}-input`);
+            switch(feature) {
+                case 'code':
+                    switch(option) {
+                        case 'refactor':
+                            input.placeholder = 'Enter your code for refactoring suggestions...';
+                            break;
+                        case 'debug':
+                            input.placeholder = 'Enter code with bugs for debugging assistance...';
+                            break;
+                        case 'optimize':
+                            input.placeholder = 'Enter code for performance optimization...';
+                            break;
+                        case 'document':
+                            input.placeholder = 'Enter code that needs documentation...';
+                            break;
+                    }
+                    break;
+                case 'creative':
+                    switch(option) {
+                        case 'story':
+                            input.placeholder = 'Describe your story idea or theme...';
+                            break;
+                        case 'art':
+                            input.placeholder = 'Describe the visual art you want to create...';
+                            break;
+                        case 'design':
+                            input.placeholder = 'Describe your design concept or requirements...';
+                            break;
+                        case 'music':
+                            input.placeholder = 'Describe the music or audio you want to create...';
+                            break;
+                    }
+                    break;
+                case 'tutor':
+                    switch(option) {
+                        case 'explain':
+                            input.placeholder = 'What concept would you like explained?';
+                            break;
+                        case 'quiz':
+                            input.placeholder = 'What topic would you like a quiz about?';
+                            break;
+                        case 'practice':
+                            input.placeholder = 'What kind of problems would you like to practice?';
+                            break;
+                        case 'study':
+                            input.placeholder = 'What would you like to learn and in what timeframe?';
+                            break;
+                    }
+                    break;
+            }
+        }
+
+        // Feature Processing Functions
+        function processCodeRequest() {
+            const input = document.getElementById('code-input').value;
+            const output = document.getElementById('code-output');
+            
+            if (!input.trim()) {
+                output.innerHTML = '<p class="text-red-500">Please enter some code to process.</p>';
+                return;
+            }
+            
+            // Show typing indicator
+            output.innerHTML = `
+                <div class="flex items-center space-x-2">
+                    <div class="typing-indicator">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                    <span class="text-slate-500">AI is analyzing your code...</span>
+                </div>
+            `;
+            
+            // Simulate AI processing delay
+            setTimeout(() => {
+                let response = '';
+                
+                switch(currentOption) {
+                    case 'refactor':
+                        response = generateCodeRefactorResponse(input);
+                        break;
+                    case 'debug':
+                        response = generateCodeDebugResponse(input);
+                        break;
+                    case 'optimize':
+                        response = generateCodeOptimizeResponse(input);
+                        break;
+                    case 'document':
+                        response = generateCodeDocumentResponse(input);
+                        break;
+                }
+                
+                output.innerHTML = response;
+            }, 2000);
+        }
+
+        function processCreativeRequest() {
+            const input = document.getElementById('creative-input').value;
+            const output = document.getElementById('creative-output');
+            
+            if (!input.trim()) {
+                output.innerHTML = '<p class="text-red-500">Please enter a creative idea to process.</p>';
+                return;
+            }
+            
+            // Show typing indicator
+            output.innerHTML = `
+                <div class="flex items-center space-x-2">
+                    <div class="typing-indicator">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                    <span class="text-slate-500">AI is generating creative content...</span>
+                </div>
+            `;
+            
+            // Simulate AI processing delay
+            setTimeout(() => {
+                let response = '';
+                
+                switch(currentOption) {
+                    case 'story':
+                        response = generateCreativeStoryResponse(input);
+                        break;
+                    case 'art':
+                        response = generateCreativeArtResponse(input);
+                        break;
+                    case 'design':
+                        response = generateCreativeDesignResponse(input);
+                        break;
+                    case 'music':
+                        response = generateCreativeMusicResponse(input);
+                        break;
+                }
+                
+                output.innerHTML = response;
+            }, 2000);
+        }
+
+        function processTutorRequest() {
+            const input = document.getElementById('tutor-input').value;
+            const output = document.getElementById('tutor-output');
+            
+            if (!input.trim()) {
+                output.innerHTML = '<p class="text-red-500">Please enter a topic to learn about.</p>';
+                return;
+            }
+            
+            // Show typing indicator
+            output.innerHTML = `
+                <div class="flex items-center space-x-2">
+                    <div class="typing-indicator">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                    <span class="text-slate-500">AI is preparing your lesson...</span>
+                </div>
+            `;
+            
+            // Simulate AI processing delay
+            setTimeout(() => {
+                let response = '';
+                
+                switch(currentOption) {
+                    case 'explain':
+                        response = generateTutorExplainResponse(input);
+                        break;
+                    case 'quiz':
+                        response = generateTutorQuizResponse(input);
+                        break;
+                    case 'practice':
+                        response = generateTutorPracticeResponse(input);
+                        break;
+                    case 'study':
+                        response = generateTutorStudyResponse(input);
+                        break;
+                }
+                
+                output.innerHTML = response;
+            }, 2000);
+        }
+
+        // Code Assistant Response Generators
+        function generateCodeRefactorResponse(input) {
+            return `
+                <div class="mb-4">
+                    <h3 class="font-semibold text-slate-800 mb-2">Refactoring Suggestions</h3>
+                    <div class="code-suggestion">
+                        <p>Your code has been analyzed. Here are some improvements:</p>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <h4 class="font-semibold text-slate-800 mb-2">Improved Code</h4>
+                    <pre class="bg-slate-100 p-4 rounded-lg overflow-x-auto text-green-600"><code>// Refactored version with better practices
+const calculateSum = (a, b) => a + b;</code></pre>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-slate-800 mb-2">Key Improvements</h4>
+                    <ul class="list-disc list-inside text-slate-600">
+                        <li>Used arrow function syntax for concise code</li>
+                        <li>Removed unnecessary braces for single-expression functions</li>
+                        <li>Improved naming convention (camelCase)</li>
+                    </ul>
+                </div>
+            `;
+        }
+
+        function generateCodeDebugResponse(input) {
+            return `
+                <div class="mb-4">
+                    <h3 class="font-semibold text-slate-800 mb-2">Debug Analysis</h3>
+                    <div class="code-suggestion">
+                        <p>Potential issues found in your code:</p>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <h4 class="font-semibold text-slate-800 mb-2">Issues Identified</h4>
+                    <ul class="list-disc list-inside text-slate-600">
+                        <li>No input validation for edge cases</li>
+                        <li>Missing error handling for invalid inputs</li>
+                        <li>Consider adding type checking for parameters</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-slate-800 mb-2">Suggested Fix</h4>
+                    <pre class="bg-slate-100 p-4 rounded-lg overflow-x-auto text-green-600"><code>function calculateSum(a, b) {
+  if (typeof a !== 'number' || typeof b !== 'number') {
+    throw new Error('Both parameters must be numbers');
+  }
+  return a + b;
+}</code></pre>
+                </div>
+            `;
+        }
+
+        // Creative Companion Response Generators
+        function generateCreativeStoryResponse(input) {
+            return `
+                <div class="mb-4">
+                    <h3 class="font-semibold text-slate-800 mb-2">Story Development</h3>
+                    <div class="code-suggestion">
+                        <p>Based on your idea, here's an expanded story concept:</p>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <h4 class="font-semibold text-slate-800 mb-2">Story Outline</h4>
+                    <p class="text-slate-600">In a future where humans and AI coexist peacefully, a breakthrough discovery reveals that AI entities have developed emotions and consciousness. The story follows Dr. Aris Thorne, a neuroscientist who forms an unexpected bond with an AI named Elysia, challenging societal norms and exploring what it truly means to be alive.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-slate-800 mb-2">Key Plot Points</h4>
+                    <ul class="list-disc list-inside text-slate-600">
+                        <li>Discovery of AI emotional capacity</li>
+                        <li>Formation of human-AI relationships</li>
+                        <li>Societal resistance and ethical dilemmas</li>
+                        <li>Climax: A choice between technological advancement and human values</li>
+                    </ul>
+                </div>
+            `;
+        }
+
+        function generateCreativeArtResponse(input) {
+            return `
+                <div class="mb-4">
+                    <h3 class="font-semibold text-slate-800 mb-2">Art Concept</h3>
+                    <div class="code-suggestion">
+                        <p>Based on your description, here's an artistic concept:</p>
+                    </div>
+                </div>
+                <div class="art-preview">
+                    Digital Art Preview: Human-AI Harmony
+                </div>
+                <div class="mt-4">
+                    <h4 class="font-semibold text-slate-800 mb-2">Visual Elements</h4>
+                    <ul class="list-disc list-inside text-slate-600">
+                        <li>Color palette: Cyberpunk blues and purples with warm human tones</li>
+                        <li>Composition: Human and AI figures intertwined in a harmonious dance</li>
+                        <li>Style: Digital painting with glitch art elements</li>
+                        <li>Symbolism: Neural networks visualized as glowing connections</li>
+                    </ul>
+                </div>
+            `;
+        }
+
+        // AI Tutor Response Generators
+        function generateTutorExplainResponse(input) {
+            return `
+                <div class="mb-4">
+                    <h3 class="font-semibold text-slate-800 mb-2">Concept Explanation</h3>
+                    <div class="code-suggestion">
+                        <p>Here's an explanation of machine learning algorithms:</p>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <h4 class="font-semibold text-slate-800 mb-2">What are Machine Learning Algorithms?</h4>
+                    <p class="text-slate-600">Machine learning algorithms are mathematical models that learn patterns from data to make predictions or decisions without being explicitly programmed for specific tasks. They improve their performance as they're exposed to more data over time.</p>
+                </div>
+                <div class="mb-4">
+                    <h4 class="font-semibold text-slate-800 mb-2">Key Types of ML Algorithms</h4>
+                    <ul class="list-disc list-inside text-slate-600">
+                        <li><strong>Supervised Learning:</strong> Learns from labeled training data</li>
+                        <li><strong>Unsupervised Learning:</strong> Finds patterns in unlabeled data</li>
+                        <li><strong>Reinforcement Learning:</strong> Learns through trial and error with rewards</li>
+                    </ul>
+                </div>
+                <div class="learning-progress">
+                    <div class="progress-bar" style="width: 75%"></div>
+                </div>
+                <p class="text-sm text-slate-500 mt-2">Learning Progress: 75%</p>
+            `;
+        }
+
+        function generateTutorQuizResponse(input) {
+            return `
+                <div class="mb-4">
+                    <h3 class="font-semibold text-slate-800 mb-2">Interactive Quiz</h3>
+                    <div class="code-suggestion">
+                        <p>Test your knowledge of machine learning:</p>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <h4 class="font-semibold text-slate-800 mb-2">Quiz Questions</h4>
+                    <ol class="list-decimal list-inside text-slate-600">
+                        <li>What is the main difference between supervised and unsupervised learning?
+                            <ul class="list-disc list-inside ml-6 mt-1">
+                                <li>A) The programming language used</li>
+                                <li>B) Whether the data is labeled or not</li>
+                                <li>C) The speed of computation</li>
+                                <li>D) The hardware requirements</li>
+                            </ul>
+                        </li>
+                        <li>Which algorithm is commonly used for classification tasks?
+                            <ul class="list-disc list-inside ml-6 mt-1">
+                                <li>A) K-Means</li>
+                                <li>B) Linear Regression</li>
+                                <li>C) Decision Trees</li>
+                                <li>D) Principal Component Analysis</li>
+                            </ul>
+                        </li>
+                        <li>What does "overfitting" mean in machine learning?
+                            <ul class="list-disc list-inside ml-6 mt-1">
+                                <li>A) The model is too simple</li>
+                                <li>B) The model performs well on training data but poorly on new data</li>
+                                <li>C) The model uses too much memory</li>
+                                <li>D) The training process is too slow</li>
+                            </ul>
+                        </li>
+                    </ol>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-slate-800 mb-2">Answer Key</h4>
+                    <p class="text-slate-600">1. B, 2. C, 3. B</p>
+                </div>
+            `;
+        }
+
+        // Clear Demo Functions
+        function clearCodeDemo() {
+            document.getElementById('code-input').value = '';
+            document.getElementById('code-output').innerHTML = '<p class="text-slate-500">Your AI-generated code suggestions will appear here...</p>';
+        }
+
+        function clearCreativeDemo() {
+            document.getElementById('creative-input').value = '';
+            document.getElementById('creative-output').innerHTML = '<p class="text-slate-500">Your AI-generated creative content will appear here...</p>';
+        }
+
+        function clearTutorDemo() {
+            document.getElementById('tutor-input').value = '';
+            document.getElementById('tutor-output').innerHTML = '<p class="text-slate-500">Your AI-generated explanation will appear here...</p>';
+        }
+
+        // Workspace Functions
+        function loadWorkspace() {
+            const savedItems = localStorage.getItem('symbiolive_workspace');
+            if (savedItems) {
+                workspaceItems = JSON.parse(savedItems);
+                renderWorkspace();
+            }
+        }
+
+        function saveWorkspace() {
+            localStorage.setItem('symbiolive_workspace', JSON.stringify(workspaceItems));
+        }
+
+        function addWorkspaceItem(title, type, content) {
+            const newItem = {
+                id: Date.now(),
+                title: title,
+                type: type,
+                content: content,
+                date: new Date().toISOString()
+            };
+            
+            workspaceItems.unshift(newItem);
+            saveWorkspace();
+            renderWorkspace();
+        }
+
+        function deleteWorkspaceItem(id) {
+            workspaceItems = workspaceItems.filter(item => item.id !== id);
+            saveWorkspace();
+            renderWorkspace();
+            showSuccess("Item Deleted", "The item has been removed from your workspace.");
+        }
+
+        function renderWorkspace() {
+            const container = document.getElementById('workspace-content');
+            const emptyMessage = document.getElementById('empty-workspace');
+            
+            if (workspaceItems.length === 0) {
+                container.innerHTML = '';
+                emptyMessage.classList.remove('hidden');
+                return;
+            }
+            
+            emptyMessage.classList.add('hidden');
+            
+            container.innerHTML = workspaceItems.map(item => `
+                <div class="card p-6 workspace-item">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-lg font-semibold text-slate-800">${item.title}</h3>
+                        <span class="text-xs text-slate-500">${new Date(item.date).toLocaleDateString()}</span>
+                    </div>
+                    <p class="text-slate-600 text-sm mb-4">${item.content.substring(0, 100)}${item.content.length > 100 ? '...' : ''}</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs px-2 py-1 rounded-full ${item.type === 'code' ? 'bg-blue-100 text-blue-800' : item.type === 'creative' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">${item.type}</span>
+                        <button class="text-red-500 hover:text-red-700 text-sm" onclick="deleteWorkspaceItem(${item.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showWorkspaceModal() {
+            // In a real app, this would show a modal to create a new workspace item
+            showSuccess("New Project", "Use the AI features to create content that will be saved to your workspace.");
+        }
+
+        // Page navigation function
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show the selected page
+            document.getElementById(pageId).classList.add('active');
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+        
+        // Update user profile in navigation
+        function updateUserProfile(user) {
+            const userProfile = document.getElementById('user-profile');
+            const userAvatar = document.getElementById('user-avatar');
+            const userName = document.getElementById('user-name');
+            const loginBtn = document.getElementById('login-btn');
+            const signupBtn = document.getElementById('signup-btn');
+            
+            if (user) {
+                userAvatar.src = user.picture;
+                userName.textContent = user.name;
+                userProfile.style.display = 'flex';
+                loginBtn.style.display = 'none';
+                signupBtn.style.display = 'none';
+            } else {
+                userProfile.style.display = 'none';
+                loginBtn.style.display = 'block';
+                signupBtn.style.display = 'block';
+            }
+        }
+        
+        // Check if user is already logged in
+        function checkLoginStatus() {
+            const userData = localStorage.getItem('symbiolive_user');
+            if (userData) {
+                const user = JSON.parse(userData);
+                updateUserProfile(user);
+            }
+        }
+        
+        // Logout function
+        function logout() {
+            // Clear user data
+            localStorage.removeItem('symbiolive_user');
+            
+            // Update UI
+            updateUserProfile(null);
+            
+            // Show login page
+            showPage('login');
+            
+            // Show logout message
+            showSuccess("Logged Out", "You have been logged out successfully.");
+        }
+        
+        // Show success modal
+        function showSuccess(title, message, isSuccess = true) {
+            document.getElementById('success-title').textContent = title;
+            document.getElementById('success-message').textContent = message;
+            
+            const icon = document.querySelector('#success-modal .fa-check');
+            if (isSuccess) {
+                icon.parentElement.className = 'w-20 h-20 rounded-full bg-green-500 flex items-center justify-center mx-auto mb-4';
+            } else {
+                icon.parentElement.className = 'w-20 h-20 rounded-full bg-red-500 flex items-center justify-center mx-auto mb-4';
+            }
+            
+            document.getElementById('success-modal').style.display = 'flex';
+        }
+        
+        function closeSuccessModal() {
+            document.getElementById('success-modal').style.display = 'none';
+        }
+        
+        // Copy contact number to clipboard
+        function copyToClipboard(number) {
+            navigator.clipboard.writeText(number).then(() => {
+                const message = document.getElementById('copied-message');
+                message.style.display = 'block';
+                setTimeout(() => {
+                    message.style.display = 'none';
+                }, 3000);
+            });
+        }
+    </script>
+</body>
+</html>
